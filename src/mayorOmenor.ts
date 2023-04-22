@@ -1,19 +1,17 @@
 /* Esta clase hace que el juego de mayor o menor funcione. Se encarga de comunicarse con la clase Jugador, y la clase Pantalla...
 Todo lo maneja desde el metodo jugar(). Que tiene un bucle que se repite hasta que le digas que no, o hasta que te quedes sin dinero
-Los otros metodos que surgen segun se los necesite son los de leer o modificar los atributos de la clase, un metodo del reglamento
+Los otros metodos que surgen segun se los necesite son los de leer o modificar los atributos de la clase, un metodo reglamento
 que devuelve un string, que luego se mostrara en pantalla.
-
-Los atributos que tiene son el titulo del juego, las cartas una, la de la mesa, y dos la proxima a salir, el jugador y el mazo con el
+Los atributos que tiene son el titulo del juego, las cartas uno, la de la mesa, y dos la proxima a salir, el jugador y el mazo con el
 que se va a dar las cartas.
+*/
 
-Los demas metodos estan comentados*/
-
-import { green } from "colors";
 import { Cartas } from "./cartas";
 import { Jugador } from "./jugador";
 import { Mazo } from "./mazo";
-import { Pantalla } from "./pantalla";
+import  {red, blue, green,yellow} from "colors";
 import * as readlineSync from 'readline-sync';
+import { Pantalla } from "./pantalla";
 
 export class MayorOmenor{
     private titulo:string;
@@ -48,7 +46,7 @@ export class MayorOmenor{
 
     private reglamentoJuego():string[]{
         const reglamento: string[] = new Array;
-        reglamento.push(`El juego consiste en acertar si la sigueiente carta es mayor o menor`);
+        reglamento.push(`El juego consiste en acertar si la siguiente carta es mayor o menor`);
         reglamento.push(`Primero debe apostar las fichas que cree conveniente, RECUERDE,`);
         reglamento.push(`tiene que apostar más de una ficha y menos del total de fichas que posee.`);
         reglamento.push(`Despues se le mostrara una carta en la mesa, debe adivinar si la siguiente es mayor o menor,`);
@@ -130,7 +128,7 @@ export class MayorOmenor{
             this.carta2=this.mazo.darCarta();
         } else {
             if ((pApuesta===1)&&(this.verificaMayor()===true)){          //verifica si la apuesta fue a mayor y si la carta es mayor. Calcula el premio
-                premio=Number((10-this.probabilidadMayor()/10).toFixed(0))*this.jugador.getApuesta();       //restandole a 10 el porcentaje de probacilidades que tenia, y multiplicandolo por la apuesta-
+                premio=Number((10-this.probabilidadMayor()/10).toFixed(0))*this.jugador.getApuesta();       //restandole a 10 el porcentaje de probabilidades que tenia, y multiplicandolo por la apuesta-
             } else {                                                                                        //de 0 a 9 va a multiplicar la apuesta por 10, de 10 a 19 multipluca por 20, de 20 a 29 por 30 y asi.
                 if ((pApuesta===2)&&(this.verificaMenor()===true)){                                         // para menor hace lo mismo pero si es menor.
                     premio=Number((10-this.probabilidadMenor()/10).toFixed(0))*this.jugador.getApuesta();
@@ -153,7 +151,8 @@ export class MayorOmenor{
 
     private entregarPremio(pApuesta:number):string[]{                                                       // Genera mensajes de entrega de premio, y llama a los metodos para saber si gano o perdio
         let premio:string[]=new  Array;
-        const valor=this.calcularPremio(pApuesta)                                                            //llama al metodo calcular premio para saber si gano o perdio
+        const valor=this.calcularPremio(pApuesta);                                                            //llama al metodo calcular premio para saber si gano o perdio
+        premio.push(`${red(`SU APUESTA ES DE: ${this.jugador.getApuesta()}\n`)}`);
         if(valor!==0){
             premio.push(`Felicitaciones... gano`.toUpperCase());                                            // si el valor es distinto de 0 quiere decir que gano y da mensaje de felicitaciones
             premio.push(`Su premio es de ${valor}`);
@@ -176,13 +175,13 @@ export class MayorOmenor{
         pPantalla.borrarConsola();                                                                          // borra la consola
         pPantalla.setPantalla(this.reglamentoJuego());                                                      // setea el arreglo a mostrar en pantalla con las reglas del juego
         pPantalla.mostrarReglas(this.titulo);                                                               // muestra el reglamento en pantalla
-        pPantalla.pausaConsola();                                                                           // pasa la pantalla hasta que se precione enter
+        pPantalla.pausaConsola();  
+        pPantalla.borrarConsola();                                                                       // borra la pantalla
+        pPantalla.bienvenido(this.titulo);                                                                         // pasa la pantalla hasta que se precione enter
         do {
             this.carta1=this.carta2;                                                                        // comienza el ciclo del juego, se termina cuando te quedas sin fichas, o cuando decis que no queres jugar mas
             this.carta2=this.mazo.darCarta();                                                                    // Pasa la carta 2 a carta 1, y da una nueva carta a carta 2
             strPantalla=[];
-            pPantalla.borrarConsola();                                                                       // borra la pantalla
-            pPantalla.bienvenido(this.titulo);
             strPantalla.push(`${this.carta1.mostrarCartaPantalla(true)} \n`);                                // empieza a cargar el array a mostrar en pantalla con la carta 1
             strPantalla.push.apply(strPantalla,this.probabilidad());                                         // carga las probabilidades
             strPantalla.push(`Recuerde si sale ${green("COMODIN")} pierde todo su dinero\n`);                // y la advertencia de comodin
@@ -213,4 +212,3 @@ export class MayorOmenor{
     }
 
 }
-

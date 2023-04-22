@@ -3,15 +3,15 @@ import { Mazo } from "./mazo";
 import { Tragamonedas } from "./tragamonedas";
 
 export class TragamonedasCartas extends Tragamonedas {
-    private guia: Mazo [];
     private tirada: number[][];
     private mazo:Mazo;
+    private guia: Mazo [];
 
     public constructor (pJugador:Jugador,pNombre:string){
         super(pJugador,pNombre);
-        this.guia= new Array ();
         this.tirada= new Array();
         this.mazo = new Mazo();
+        this.guia = new Array();
     }
 
     public reglamentoJuego():string[]{
@@ -20,7 +20,7 @@ export class TragamonedasCartas extends Tragamonedas {
         reglamento.push(`Cada guia tiene 14 cartas, del 1 al 13 mas el comodin`);
         reglamento.push(`Son cuatro guias, y no van a salir dos cartas iguales en la misma guia`);
         reglamento.push(`Si salen cuatro cartas iguales en la misma linea obtendra veinticinco veces la apuesta`);
-        reglamento.push(`si salen dispersas en distintas guias obtendras 5 veces la apuesta.\n`);
+        reglamento.push(`si salen dispersas en distintas guias obtendras cinco veces la apuesta.\n`);
         return reglamento;
     }
 
@@ -50,45 +50,60 @@ export class TragamonedasCartas extends Tragamonedas {
 
     }
 
+
     public mostrarEnPantalla():string[]{
         let aux:string[] = new Array;
         for (let i:number=0;i<4;i++){                   
             for (let j:number=0;j<3;j++){
-                aux.push(`${this.guia[i].getMazo()[this.tirada[i][j]].getCartas()}`);
+                aux.push(`${this.mazo.getMazo()[this.tirada[i][j]+(14*i)].getCartas()}`);
             }
         }
         return aux;
     }
 
     private verificarCuatroIguales():boolean{
-        let condicion:boolean = false;
-        let cantidad:number;
-        for (let j:number =0;j<3;j++){
-            cantidad=1;
-            for (let i:number=1;i<4;i++){
-                if (this.tirada[j][i]===this.tirada[j][0]){
-                    cantidad=cantidad+1;
+        let condicion:boolean=false;
+        let cantidad:number[] = new Array();
+        cantidad.push(1,1,1,1);
+        
+        for (let i:number =1;i<4;i++){
+            for (let j:number=0;j<3;j++){
+                if (this.tirada[i][j]===this.tirada[0][0]){
+                        cantidad[0]=cantidad[0]+1;
+                }
+                if (this.tirada[i][j]===this.tirada[0][1]){
+                    cantidad[1]=cantidad[1]+1;
+                }
+                if (this.tirada[i][j]===this.tirada[0][2]){
+                    cantidad[2]=cantidad[2]+1;
+                }
+                if (this.tirada[i][j]===this.tirada[0][3]){
+                    cantidad[3]=cantidad[3]+1;
                 }
             }
-            if (cantidad===4){
-                condicion=true;
-            }
         }
+        if (cantidad.includes(4)){
+            condicion=true;
+        }
+        
+        
         return condicion;
     }
 
     private verificarLinea():boolean{
         let condicion:boolean = false;
         for (let i:number =0;i<3;i++){
-            if ((this.tirada[i][1]===this.tirada[i][0])&&(this.tirada[i][2]===this.tirada[i][0])&&(this.tirada[i][3]===this.tirada[i][0])){
+            if ((this.tirada[1][i]===this.tirada[0][i])&&(this.tirada[2][i]===this.tirada[0][i])&&(this.tirada[3][i]===this.tirada[0][i])){
                 condicion=true;
             }
-        }
+        }        
         return condicion;
     }
 
     public calcularPremio():number{
         let premio:number=0;
+        
+        
         if (this.verificarCuatroIguales()===true){                             //Verifica que haya cuatro cartas iguales. Si hay cuatro iguales entrega 5 veces la apuesta
             premio=this.jugador.getApuesta()*5;
         } 

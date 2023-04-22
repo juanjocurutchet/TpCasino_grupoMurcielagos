@@ -1,6 +1,6 @@
 import { Casino } from "./casino";
+import { Jugador } from "./jugador";
 
-
-
-let casino = new Casino();
-casino.inscripcion();
+let jugador = new Jugador("",0);
+let casino = new Casino(jugador);
+casino.inscripcion(jugador);

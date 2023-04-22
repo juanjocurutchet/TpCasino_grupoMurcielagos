@@ -1,8 +1,7 @@
-import { blue, green, red, yellow } from "colors";
 import * as readlineSync from 'readline-sync';
-import { Jugador } from "./jugador";
-
-export class Pantalla{
+import  {red, blue, green,yellow} from "colors";
+import { Jugador } from './jugador';
+export class Pantalla {
     private pantalla:string[];
 
     public constructor(pPantalla:string[]) {
@@ -65,10 +64,6 @@ export class Pantalla{
             default:
                 console.log("algo fallo");
         }
-        
-        
-
-        //console.log(blue(`\nCALCULANDO PREMIOS.....\n`));
         
     }
 
@@ -165,8 +160,7 @@ export class Pantalla{
                     }
                 } 
                 break;
-        } 
-        this.pausaConsola();       
+        }      
         return condicion; 
         
     }
@@ -179,8 +173,10 @@ export class Pantalla{
         readlineSync.question("Presiona " + green("Enter") + " para continuar...");
     }
 
-    public juegoPantalla():void{
-
-    }
-
+ 
 }
+
+
+
+
+

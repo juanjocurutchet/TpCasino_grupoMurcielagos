@@ -1,9 +1,9 @@
-import { green } from "colors";
 import { Jugador } from "./jugador";
 import { Pantalla } from "./pantalla";
 import * as readlineSync from 'readline-sync';
+import  {red, blue, green,yellow} from "colors";
 
-export abstract class Tragamonedas{
+export abstract class Tragamonedas {
     private nombre:string;
     protected jugador:Jugador;
 
@@ -25,6 +25,7 @@ export abstract class Tragamonedas{
     private entregarPremio():string[]{                                                          // Genera mensajes de entrega de premio, y llama a los metodos para saber si gano o perdio
         let premio:string[]=new  Array;
         const valor=this.calcularPremio();                                                           //llama al metodo calcular premio para saber si gano o perdio
+        premio.push(`${red(`SU APUESTA ES DE: ${this.jugador.getApuesta()}\n`)}`);
         if(valor!==0){
             premio.push(`${green(`Felicitaciones... gano\n`.toUpperCase())}`);                                            // si el valor es distinto de 0 quiere decir que gano y da mensaje de felicitaciones
             premio.push(`${green(`Su premio es de ${valor}\n`)}`);
@@ -41,8 +42,8 @@ export abstract class Tragamonedas{
         pPantalla.borrarConsola();                                                                          // borra la consola
         pPantalla.setPantalla(this.reglamentoJuego());                                                      // setea el arreglo a mostrar en pantalla con las reglas del juego
         pPantalla.mostrarReglas(this.getNombreTragamonedas());                                                               // muestra el reglamento en pantalla
-        pPantalla.pausaConsola();     
-        this.cargarGuia();
+        pPantalla.pausaConsola();  
+        this.cargarGuia();   
         do {
             strPantalla=[];
             pPantalla.borrarConsola();                                                                       // borra la pantalla
@@ -61,12 +62,15 @@ export abstract class Tragamonedas{
             pPantalla.setPantalla(strPantalla);
             pPantalla.mostrarMensaje();
         } while ((this.jugador.getDinero()>0)&&(readlineSync.keyInYN("¿Desea jugar de nuevo? ")));
+        
     }
 
     abstract mostrarEnPantalla():string[];
     abstract setTirada():void;
-    abstract cargarGuia():void;
     abstract reglamentoJuego():string[];
     abstract calcularPremio():number;
+    abstract cargarGuia():void;
+
+
 
 }

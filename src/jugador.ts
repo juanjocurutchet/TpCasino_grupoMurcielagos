@@ -1,8 +1,14 @@
-import { Pantalla } from "./pantalla";
+/* La clase jugador se encarga de manejar las apuestas, el dinero del jugador y de elegir el juego al que desea jugar. 
+Tiene como atributos el nombre, el dinero y la apuesta que va a realizar.Cuando apuesta solo puede apostar mayor a 0 y
+menor a la cantidad de fichas que posee. Cada vez que la apuesta es aceptada se le descuenta del dinero, y si gana se le
+reintegra junto al premio.Tambien existe un metodo por si se queda sin fichas para recargar fichas.*/
+
 import * as readlineSync from 'readline-sync';
+import { Pantalla } from "./pantalla";
 import { Casino } from "./casino";
 
-export class Jugador{
+
+export class Jugador {
     private nombre:String;
     private dinero:number;
     private apuesta:number;
@@ -25,7 +31,10 @@ export class Jugador{
     public getApuesta():number{
         return this.apuesta;
     }
-
+    
+    public setNombre(pNombre:string):void {
+        this.nombre=pNombre;
+    }
     public setApuesta(pApuesta:number):void {
         this.apuesta=pApuesta;
     }
@@ -39,34 +48,7 @@ export class Jugador{
 
     public apostar(pPantalla:Pantalla):void {
 
-        do {
-
-            
-    
-           /* apuestaLocal = readlineSync.questionInt("Ingrese su apuesta: ".toUpperCase());
-        
-        
-            if(apuestaLocal<=0){ 
-                console.log("No se puede apostar en negativo".toUpperCase());
-            } else {
-                if (apuestaLocal>this.dinero){
-                    console.log("Saldo insuficiente para esta apuesta".toUpperCase());
-                }  
-            }
-        
-            /*   if ((apuestaLocal>0)&&(apuestaLocal<=this.dinero)){
-                this.dinero=this.dinero-apuestaLocal;
-                this.apuesta=apuestaLocal;
-            }   else {
-                if(apuestaLocal<=0){ 
-                    console.log("No se puede apostar en negativo".toUpperCase());
-                } else {
-                    console.log("Saldo insuficiente para esta apuesta".toUpperCase());
-                }
-
-                (apuestaLocal<=0)||(apuestaLocal>this.dinero)
-            }*/
-            
+        do {            
         
         } while (pPantalla.comprobacionDatoIngresado(this.dinero,1,2,this)===false);     // hace comprobacion de datos si es falso va a seguir preguntando
 
@@ -88,14 +70,13 @@ export class Jugador{
         
     }
 
-    public jugar(pPantalla:Pantalla):void{
+    public jugar(pPantalla:Pantalla, pCasino:Casino):void{
         let valor:number;
         
         do {
             valor = pPantalla.menuPantalla();
             if ((valor>0)&&(valor<5)){
-                let casino = new Casino();
-                casino.fabrica(valor,this,pPantalla);
+                pCasino.fabrica(valor,pPantalla);
             } else {
                 if ((valor<0)||(valor>=5)) {
                     console.log("Debe ingresar opciones del menu".toUpperCase());
@@ -107,5 +88,4 @@ export class Jugador{
         } while(valor!=0);
     }
 
-    
 }
