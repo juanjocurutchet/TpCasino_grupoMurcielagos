@@ -6,9 +6,9 @@ const tragamonedas_1 = require("./tragamonedas");
 class TragamonedasCartas extends tragamonedas_1.Tragamonedas {
     constructor(pJugador, pNombre) {
         super(pJugador, pNombre);
-        this.guia = new Array();
         this.tirada = new Array();
         this.mazo = new mazo_1.Mazo();
+        this.guia = new Array();
     }
     reglamentoJuego() {
         const reglamento = new Array;
@@ -16,7 +16,7 @@ class TragamonedasCartas extends tragamonedas_1.Tragamonedas {
         reglamento.push(`Cada guia tiene 14 cartas, del 1 al 13 mas el comodin`);
         reglamento.push(`Son cuatro guias, y no van a salir dos cartas iguales en la misma guia`);
         reglamento.push(`Si salen cuatro cartas iguales en la misma linea obtendra veinticinco veces la apuesta`);
-        reglamento.push(`si salen dispersas en distintas guias obtendras 5 veces la apuesta.\n`);
+        reglamento.push(`si salen dispersas en distintas guias obtendras cinco veces la apuesta.\n`);
         return reglamento;
     }
     cargarGuia() {
@@ -47,31 +47,40 @@ class TragamonedasCartas extends tragamonedas_1.Tragamonedas {
         let aux = new Array;
         for (let i = 0; i < 4; i++) {
             for (let j = 0; j < 3; j++) {
-                aux.push(`${this.guia[i].getMazo()[this.tirada[i][j]].getCartas()}`);
+                aux.push(`${this.mazo.getMazo()[this.tirada[i][j] + (14 * i)].getCartas()}`);
             }
         }
         return aux;
     }
     verificarCuatroIguales() {
         let condicion = false;
-        let cantidad;
-        for (let j = 0; j < 3; j++) {
-            cantidad = 1;
-            for (let i = 1; i < 4; i++) {
-                if (this.tirada[j][i] === this.tirada[j][0]) {
-                    cantidad = cantidad + 1;
+        let cantidad = new Array();
+        cantidad.push(1, 1, 1, 1);
+        for (let i = 1; i < 4; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (this.tirada[i][j] === this.tirada[0][0]) {
+                    cantidad[0] = cantidad[0] + 1;
+                }
+                if (this.tirada[i][j] === this.tirada[0][1]) {
+                    cantidad[1] = cantidad[1] + 1;
+                }
+                if (this.tirada[i][j] === this.tirada[0][2]) {
+                    cantidad[2] = cantidad[2] + 1;
+                }
+                if (this.tirada[i][j] === this.tirada[0][3]) {
+                    cantidad[3] = cantidad[3] + 1;
                 }
             }
-            if (cantidad === 4) {
-                condicion = true;
-            }
+        }
+        if (cantidad.includes(4)) {
+            condicion = true;
         }
         return condicion;
     }
     verificarLinea() {
         let condicion = false;
         for (let i = 0; i < 3; i++) {
-            if ((this.tirada[i][1] === this.tirada[i][0]) && (this.tirada[i][2] === this.tirada[i][0]) && (this.tirada[i][3] === this.tirada[i][0])) {
+            if ((this.tirada[1][i] === this.tirada[0][i]) && (this.tirada[2][i] === this.tirada[0][i]) && (this.tirada[3][i] === this.tirada[0][i])) {
                 condicion = true;
             }
         }

@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TragamonedasFrutas = void 0;
-const frutas_1 = require("./frutas");
 const tragamonedas_1 = require("./tragamonedas");
+const frutas_1 = require("./frutas");
 class TragamonedasFrutas extends tragamonedas_1.Tragamonedas {
     constructor(pJugador, pNombre) {
         super(pJugador, pNombre);
@@ -20,47 +20,38 @@ class TragamonedasFrutas extends tragamonedas_1.Tragamonedas {
         return reglamento;
     }
     cargarGuia() {
-        let fruta0 = new frutas_1.Frutas(" frutilla");
-        let fruta1 = new frutas_1.Frutas("  banana ");
+        let fruta0 = new frutas_1.Frutas(" frutilla ");
+        let fruta1 = new frutas_1.Frutas("  banana  ");
         let fruta2 = new frutas_1.Frutas("  manzana ");
         let fruta3 = new frutas_1.Frutas("   pera   ");
-        let fruta4 = new frutas_1.Frutas("   mango ");
+        let fruta4 = new frutas_1.Frutas("   mango  ");
         let fruta5 = new frutas_1.Frutas(" arandano ");
-        let fruta6 = new frutas_1.Frutas("  cereza ");
-        let fruta7 = new frutas_1.Frutas("    uva  ");
-        let fruta8 = new frutas_1.Frutas("   kiwi ");
+        let fruta6 = new frutas_1.Frutas("  cereza  ");
+        let fruta7 = new frutas_1.Frutas("    uva   ");
+        let fruta8 = new frutas_1.Frutas("   kiwi   ");
         let fruta9 = new frutas_1.Frutas("  naranja ");
         let fruta10 = new frutas_1.Frutas(" mandarina");
-        let fruta11 = new frutas_1.Frutas("  sandia ");
-        let fruta12 = new frutas_1.Frutas("   melon ");
-        let fruta13 = new frutas_1.Frutas("   caqui ");
-        let fruta14 = new frutas_1.Frutas("   anana ");
+        let fruta11 = new frutas_1.Frutas("  sandia  ");
+        let fruta12 = new frutas_1.Frutas("   melon  ");
+        let fruta13 = new frutas_1.Frutas("   caqui  ");
+        let fruta14 = new frutas_1.Frutas("   anana  ");
         this.guia.push(fruta0, fruta1, fruta2, fruta3, fruta4, fruta5, fruta6, fruta7, fruta8, fruta9, fruta10, fruta11, fruta12, fruta13, fruta14);
     }
-    /*public setTirada():void{
-        this.tirada=[];
-        let indice : number;
-        for (let i:number=0; i<3; i++){
-            this.tirada[i]=[];
-            for (let j:number=0; j<3; j++) {
-                indice = Math.floor(Math.random()*15);
-                    if (this.tirada[i].includes(indice)){
-                        j = j-1;
-                    } else {
-                        this.tirada[i].push(indice);
-                    }
-                
+    setTirada() {
+        this.tirada = [];
+        let indice;
+        for (let i = 0; i < 3; i++) {
+            this.tirada[i] = [];
+            for (let j = 0; j < 3; j++) {
+                indice = Math.floor(Math.random() * 15);
+                if (this.tirada[i].includes(indice)) {
+                    j = j - 1;
+                }
+                else {
+                    this.tirada[i].push(indice);
+                }
             }
         }
-        
-        
-    }*/
-    setTirada() {
-        this.tirada = [
-            [1, 5, 3],
-            [2, 5, 8],
-            [5, 1, 3],
-        ];
     }
     mostrarEnPantalla() {
         let aux = new Array;
@@ -73,27 +64,30 @@ class TragamonedasFrutas extends tragamonedas_1.Tragamonedas {
     }
     verificarTresIguales() {
         let condicion = false;
-        let cantidad;
-        for (let j = 0; j < 3; j++) {
-            cantidad = 1;
-            for (let i = 1; i < 3; i++) {
-                if (this.tirada[j][i] === this.tirada[j][0]) {
-                    cantidad = cantidad + 1;
+        let cantidad = new Array();
+        cantidad.push(1, 1, 1);
+        for (let i = 1; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                if (this.tirada[i][j] === this.tirada[0][0]) {
+                    cantidad[0] = cantidad[0] + 1;
+                }
+                if (this.tirada[i][j] === this.tirada[0][1]) {
+                    cantidad[1] = cantidad[1] + 1;
+                }
+                if (this.tirada[i][j] === this.tirada[0][2]) {
+                    cantidad[2] = cantidad[2] + 1;
                 }
             }
-            if (cantidad === 3) {
-                condicion = true;
-            }
+        }
+        if (cantidad.includes(3)) {
+            condicion = true;
         }
         return condicion;
-        // Comprobar filas
-        // Si no se encontraron tres iguales en cada array
-        return false;
     }
     verificarLinea() {
         let condicion = false;
         for (let i = 0; i < 3; i++) {
-            if ((this.tirada[i][1] === this.tirada[i][0]) && (this.tirada[i][2] === this.tirada[i][0])) {
+            if ((this.tirada[1][i] === this.tirada[0][i]) && (this.tirada[2][i] === this.tirada[0][i])) {
                 condicion = true;
             }
         }

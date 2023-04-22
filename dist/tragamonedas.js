@@ -24,8 +24,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tragamonedas = void 0;
-const colors_1 = require("colors");
 const readlineSync = __importStar(require("readline-sync"));
+const colors_1 = require("colors");
 class Tragamonedas {
     constructor(pJugador, pNombre) {
         this.jugador = pJugador;
@@ -40,6 +40,7 @@ class Tragamonedas {
     entregarPremio() {
         let premio = new Array;
         const valor = this.calcularPremio(); //llama al metodo calcular premio para saber si gano o perdio
+        premio.push(`${(0, colors_1.red)(`SU APUESTA ES DE: ${this.jugador.getApuesta()}\n`)}`);
         if (valor !== 0) {
             premio.push(`${(0, colors_1.green)(`Felicitaciones... gano\n`.toUpperCase())}`); // si el valor es distinto de 0 quiere decir que gano y da mensaje de felicitaciones
             premio.push(`${(0, colors_1.green)(`Su premio es de ${valor}\n`)}`);

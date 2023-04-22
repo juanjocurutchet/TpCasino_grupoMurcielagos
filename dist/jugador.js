@@ -1,4 +1,8 @@
 "use strict";
+/* La clase jugador se encarga de manejar las apuestas, el dinero del jugador y de elegir el juego al que desea jugar.
+Tiene como atributos el nombre, el dinero y la apuesta que va a realizar.Cuando apuesta solo puede apostar mayor a 0 y
+menor a la cantidad de fichas que posee. Cada vez que la apuesta es aceptada se le descuenta del dinero, y si gana se le
+reintegra junto al premio.Tambien existe un metodo por si se queda sin fichas para recargar fichas.*/
 var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
     if (k2 === undefined) k2 = k;
     var desc = Object.getOwnPropertyDescriptor(m, k);
@@ -25,7 +29,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Jugador = void 0;
 const readlineSync = __importStar(require("readline-sync"));
-const casino_1 = require("./casino");
 class Jugador {
     constructor(pNombre, pDinero) {
         this.nombre = pNombre;
@@ -41,6 +44,9 @@ class Jugador {
     getApuesta() {
         return this.apuesta;
     }
+    setNombre(pNombre) {
+        this.nombre = pNombre;
+    }
     setApuesta(pApuesta) {
         this.apuesta = pApuesta;
     }
@@ -49,29 +55,6 @@ class Jugador {
     }
     apostar(pPantalla) {
         do {
-            /* apuestaLocal = readlineSync.questionInt("Ingrese su apuesta: ".toUpperCase());
-         
-         
-             if(apuestaLocal<=0){
-                 console.log("No se puede apostar en negativo".toUpperCase());
-             } else {
-                 if (apuestaLocal>this.dinero){
-                     console.log("Saldo insuficiente para esta apuesta".toUpperCase());
-                 }
-             }
-         
-             /*   if ((apuestaLocal>0)&&(apuestaLocal<=this.dinero)){
-                 this.dinero=this.dinero-apuestaLocal;
-                 this.apuesta=apuestaLocal;
-             }   else {
-                 if(apuestaLocal<=0){
-                     console.log("No se puede apostar en negativo".toUpperCase());
-                 } else {
-                     console.log("Saldo insuficiente para esta apuesta".toUpperCase());
-                 }
- 
-                 (apuestaLocal<=0)||(apuestaLocal>this.dinero)
-             }*/
         } while (pPantalla.comprobacionDatoIngresado(this.dinero, 1, 2, this) === false); // hace comprobacion de datos si es falso va a seguir preguntando
         this.dinero = this.dinero - this.apuesta; // al dinero le resta la apuesta realizada
     }
@@ -88,13 +71,12 @@ class Jugador {
             }
         }
     }
-    jugar(pPantalla) {
+    jugar(pPantalla, pCasino) {
         let valor;
         do {
             valor = pPantalla.menuPantalla();
             if ((valor > 0) && (valor < 5)) {
-                let casino = new casino_1.Casino();
-                casino.fabrica(valor, this, pPantalla);
+                pCasino.fabrica(valor, pPantalla);
             }
             else {
                 if ((valor < 0) || (valor >= 5)) {

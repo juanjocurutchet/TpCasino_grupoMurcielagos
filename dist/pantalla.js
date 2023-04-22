@@ -24,8 +24,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Pantalla = void 0;
-const colors_1 = require("colors");
 const readlineSync = __importStar(require("readline-sync"));
+const colors_1 = require("colors");
 class Pantalla {
     constructor(pPantalla) {
         this.pantalla = pPantalla;
@@ -81,7 +81,6 @@ class Pantalla {
             default:
                 console.log("algo fallo");
         }
-        //console.log(blue(`\nCALCULANDO PREMIOS.....\n`));
     }
     mostrarMensaje() {
         for (let i = 0; i < this.pantalla.length; i++) {
@@ -170,7 +169,6 @@ class Pantalla {
                 }
                 break;
         }
-        this.pausaConsola();
         return condicion;
     }
     borrarConsola() {
@@ -178,8 +176,6 @@ class Pantalla {
     }
     pausaConsola() {
         readlineSync.question("Presiona " + (0, colors_1.green)("Enter") + " para continuar...");
-    }
-    juegoPantalla() {
     }
 }
 exports.Pantalla = Pantalla;

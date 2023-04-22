@@ -24,8 +24,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Dados = void 0;
-const colors_1 = require("colors");
 const readlineSync = __importStar(require("readline-sync"));
+const colors_1 = require("colors");
 class Dados {
     constructor(jugador, nombre) {
         this.dados = [];
@@ -44,8 +44,9 @@ class Dados {
     setNombreDados(nombre) {
         this.nombre = nombre;
     }
-    premioObtenido() {
-        let premio = `Lo siento, no obtuviste ninguna combinación ganadora, su dinero actual es de ${this.jugador.getDinero()}`;
+    //Calculamos el premio obtenido segun cada combinacion...
+    calcularPremio() {
+        let premio = `Ah perdido, su dinero actual es de ${this.jugador.getDinero()}`;
         if (this.verificarGenerala()) {
             premio = `¡Felicidades, obtuviste Generala! Ganaste el premio Mayor; $ ${this.jugador.getApuesta() * 10}.`;
             this.jugador.setDinero(this.jugador.getDinero() + this.jugador.getApuesta() * 10);
@@ -67,13 +68,27 @@ class Dados {
         }
         return premio;
     }
-    reglamento() {
-        return [];
+    //Mostramos el reglamento del juego...
+    reglamentoJuego() {
+        const reglamento = new Array;
+        reglamento.push(`El juego consiste en tirar cinco dados y ver las combinaciones obtenidas`);
+        reglamento.push(`Primero debe apostar las fichas que cree conveniente, RECUERDE,`);
+        reglamento.push(`tiene que apostar más de una ficha y menos del total de fichas que posee.`);
+        reglamento.push(`Usted tiene cuatro combinaciones posibles para ganar, si salen`);
+        reglamento.push(`cinco caras iguales obtiene generala, con cuatro caras iguales`);
+        reglamento.push(`obtiene poker, con tres caras iguales y dos caras iguales obtiene full y`);
+        reglamento.push(`si salen cinco numeros consecutivos obtiene escalera.\n`);
+        reglamento.push(`Mientras menos probabilidades de ganar tenga, mayor va a ser el premio.\n`);
+        return reglamento;
     }
     jugar(pantalla) {
         let strDados = new Array();
         let strPantalla = new Array();
-        pantalla.borrarConsola();
+        pantalla.borrarConsola(); // borra la consola
+        pantalla.setPantalla(this.reglamentoJuego()); // setea el arreglo a mostrar en pantalla con las reglas del juego
+        pantalla.mostrarReglas(this.nombre); // muestra el reglamento en pantalla
+        pantalla.pausaConsola();
+        pantalla.borrarConsola(); // borra la pantalla
         pantalla.bienvenido(this.nombre);
         do {
             pantalla.borrarConsola();
@@ -84,7 +99,6 @@ class Dados {
             pantalla.mostrarMensaje();
             strPantalla = [];
             this.jugador.apostar(pantalla);
-            //                        console.log(this.probPremioMayor())
             this.tirarDados();
             strDados = [];
             for (let i = 0; i < 5; i++) {
@@ -93,72 +107,41 @@ class Dados {
             pantalla.setPantalla(strDados);
             pantalla.mostrarPantallaInicio(this.nombre);
             pantalla.pausaConsola();
-            strPantalla.push(this.premioObtenido());
+            strPantalla.push(`${(0, colors_1.red)(`SU APUESTA ES DE: ${this.jugador.getApuesta()}\n`)}`);
+            strPantalla.push(this.calcularPremio());
             strPantalla.push(`\n`);
             pantalla.setPantalla(strPantalla);
             pantalla.mostrarMensaje();
         } while ((this.jugador.getDinero() > 0) && (readlineSync.keyInYN("¿Desea jugar de nuevo? ")));
     }
-    // Calculamos las probabilidades de ganar en cada combinacion...
+    //Calculamos las probabilidades de obtenes las distintas combinaciones...
     calcularProbabilidadCuatroIguales() {
-        // Para obtener cuatro números iguales en un solo tiro con cinco dados, hay dos posibilidades:
-        // 1. Obtener cuatro dados con el mismo valor (por ejemplo, 1111).
-        // 2. Obtener cinco dados con el mismo valor (por ejemplo, 22222).
-        // En la primera posibilidad, hay 6 maneras de elegir el valor que se repetirá cuatro veces,
-        // y 5 maneras de elegir cuál de los cuatro dados no tendrá ese valor.
         const numCombinacionesPrimeraPosibilidad = 6 * 5;
-        // En la segunda posibilidad, hay 6 maneras de elegir el valor que se repetirá cinco veces.
         const numCombinacionesSegundaPosibilidad = 6;
-        // El número total de combinaciones posibles de valores en 5 dados es 6^5 (7776).
         const numCombinacionesTotal = 6 ** 5;
-        // La probabilidad de obtener cuatro números iguales en un solo tiro con cinco dados es la suma de las
-        // probabilidades de las dos posibilidades.
         const probabilidad = Number(((numCombinacionesPrimeraPosibilidad + numCombinacionesSegundaPosibilidad) / numCombinacionesTotal * 100).toFixed(3));
         return probabilidad;
     }
     calcularProbabilidadEscalera() {
-        // Para obtener una escalera en un solo tiro con cinco dados, hay dos posibilidades:
-        // 1. Obtener la escalera 1-5 (12345) o la escalera 2-6 (23456).
-        // 2. Obtener cualquier otra combinación de valores.
-        // En la primera posibilidad, hay dos maneras de obtener la escalera (12345 o 23456).
         const numEscaleras = 2;
-        // En la segunda posibilidad, hay 6^5 (7776) maneras de obtener cualquier combinación de valores.
         const numCombinacionesOtros = 6 ** 5;
-        // El número total de combinaciones posibles de valores en 5 dados es 6^5 (7776).
         const numCombinacionesTotal = 6 ** 5;
-        // La probabilidad de obtener una escalera en un solo tiro con cinco dados es la suma de las
-        // probabilidades de las dos posibilidades.
         const probabilidad = Number(((numEscaleras + numCombinacionesOtros) / numCombinacionesTotal).toFixed(3));
         return probabilidad;
     }
     calcularProbabilidadCincoIguales() {
-        // Para obtener cinco números iguales en un solo tiro con cinco dados, hay 6 posibilidades:
-        // obtener cinco dados con valor 1, 5 dados con valor 2, ..., o 5 dados con valor 6.
-        // El número de combinaciones posibles que forman cinco números iguales es 6.
         const numCombinaciones = 6;
-        // El número total de combinaciones posibles de valores en 5 dados es 6^5 (7776).
         const numCombinacionesTotal = 6 ** 5;
-        // La probabilidad de obtener cinco números iguales en un solo tiro con cinco dados es el cociente entre
-        // el número de combinaciones posibles que forman esta combinación y el número total de combinaciones posibles
-        // de valores en 5 dados.
         const probabilidad = Number((numCombinaciones / numCombinacionesTotal * 100).toFixed(3));
         return probabilidad;
     }
     calcularProbabilidadTresDosIguales() {
-        // Para obtener tres números iguales y otro dos iguales entre sí en un solo tiro con cinco dados,
-        // hay una única posibilidad: obtener tres dados con el mismo valor y dos dados con otro valor igual
-        // (por ejemplo, 11122).
-        // Hay 6 maneras de elegir el valor que se repetirá tres veces,
-        // y 5 maneras de elegir el valor que se repetirá dos veces.
         const numCombinaciones = 6 * 5;
-        // El número total de combinaciones posibles de valores en 5 dados es 6^5 (7776).
         const numCombinacionesTotal = 6 ** 5;
-        // La probabilidad de obtener tres números iguales y otro dos iguales entre sí en un solo tiro con cinco dados
-        // es el cociente entre el número de combinaciones posibles que forman esta combinación y el número total de
-        // combinaciones posibles de valores en 5 dados.
         const probabilidad = Number((numCombinaciones / numCombinacionesTotal * 100).toFixed(3));
         return probabilidad;
     }
+    //Mostramos las probalidades de ganar con cada combinacion posible...
     probabilidad() {
         const strProbabilidad = new Array();
         strProbabilidad.push(`Su probabilidad de obtener generala es de ${(0, colors_1.red)(`${this.calcularProbabilidadCincoIguales()}`)} %`);
@@ -174,7 +157,10 @@ class Dados {
             this.dados.push(Math.floor(Math.random() * 6) + 1);
         }
     }
-    // Verificamos las distintas posibilidades de ganar...
+    /* Obtenemos el primer elemento del arreglo para compararlo con el resto.Iteramos a través
+    del resto de los elementos en el arreglo, si encontramos un elemento que no es igual al
+    primer elemento, devolvemos falso. Si llegamos al final del bucle sin encontrar ningún
+    elemento diferente, devolvemos verdadero... */
     verificarGenerala() {
         const primerElemento = this.dados[0];
         for (let i = 1; i < this.dados.length; i++) {
@@ -184,6 +170,11 @@ class Dados {
         }
         return true;
     }
+    //Verificamos las distintas combinaciones posibles...
+    /* Utilizamos un bucle for para iterar sobre cada elemento del array.
+    luego utilizamos otro bucle for anidado para contar el número de ocurrencias
+    en el array. Si elememento aparece cuatro veces en el array, retorna true.Si
+    el bucle exterior se completa sin encontrar cuatro números iguales, retorna false.*/
     verificarPoker() {
         for (let i = 0; i < this.dados.length; i++) {
             const elemActual = this.dados[i];
@@ -199,6 +190,10 @@ class Dados {
         }
         return false;
     }
+    /*Primero ordenamos el arreglo de menor a mayor con sort. Luego, iteramos a través de cada
+    elemento del arreglo y verificamos si es igual al elemento anterior más 1. Si encontramos
+    un elemento que no es consecutivo, devolvemos false. Si llegamos al final del bucle sin
+    encontrar ningún elemento que no sea consecutivo, devolvemos true. */
     verificarEscalera() {
         this.dados.sort((a, b) => a - b);
         for (let i = 1; i < this.dados.length; i++) {
@@ -208,6 +203,12 @@ class Dados {
         }
         return true;
     }
+    /* Tomamos los valores de los dados y creamos un nuevo arreglo que contiene solo los valores
+    únicos almacenados en dados utilizando Set. Luego, verificamos si numerosUnicos contiene dos
+    valores únicos; si no es así, no puede haber un Full, por lo que la función devuelve false.
+    Si hay exactamente dos valores únicos en numerosUnicos, contamos cuántas veces aparece uno de
+    ellos en dados utilizando el método filter. Si ese valor aparece exactamente dos o tres veces,
+    retornamos true, de lo contrario, retornamos false. */
     verificarFull() {
         const numerosUnicos = this.dados.reduce((acumulador, valor) => {
             if (!acumulador.includes(valor)) {
