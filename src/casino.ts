@@ -17,6 +17,7 @@ export class Casino{
     private tragamonedasCartas: TragamonedasCartas;
     private mayorOmenor: MayorOmenor;
     private dados: Dados;
+    
 
     public constructor(pJugador:Jugador){
         this.nombre="LA VIRULETA";
